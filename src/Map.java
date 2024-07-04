@@ -34,7 +34,7 @@ public class Map {
         Random rand = new Random();
         int x = rand.nextInt(xMax);
         int y = rand.nextInt(yMax);
-
+        
         // Choosing first random tile on the map
         for(int h = 0; h < (xMax*yMax)-1; h++){
             Tile tile = RandomTile(map[x][y]);
