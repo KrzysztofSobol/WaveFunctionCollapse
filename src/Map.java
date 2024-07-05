@@ -1,10 +1,13 @@
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 public class Map {
-    private int xMax, yMax;
+    private final int xMax;
+    private final int yMax;
     private LinkedList<Tile>[][] map;
+    private PriorityQueue<TileInfo> tileQueue;
 
     public Map(int x, int y) {
         this.xMax = x;
@@ -14,7 +17,7 @@ public class Map {
     public void init(LinkedList<Tile> tiles) {
         tiles = deepCopyTiles(tiles);
         map = new LinkedList[xMax][yMax];
-        
+
         for (int i = 0; i < xMax; i++) {
             for (int j = 0; j < yMax; j++) {
                 map[i][j] = deepCopyTiles(tiles);
@@ -34,26 +37,19 @@ public class Map {
         Random rand = new Random();
         int x = rand.nextInt(xMax);
         int y = rand.nextInt(yMax);
-        
+
+        tileQueue.add(new TileInfo(x, y, 1));
+
         // Choosing first random tile on the map
-        for(int h = 0; h < (xMax*yMax)-1; h++){
+        while(tileQueue.isEmpty()){
             Tile tile = RandomTile(map[x][y]);
             map[x][y].clear();
             map[x][y].add(tile);
             map[x][y].getFirst().collapse();
             UpdateNeighbours(x, y);
 
-            // remake for a more efficient way to find the smallest list - priority queue maybe
-            int smallest = Integer.MAX_VALUE;
-            for(int i = 0; i < xMax; i++){
-                for(int j = 0; j < yMax; j++){
-                    if(map[i][j].size() < smallest && !(map[i][j].size() == 1 && map[i][j].getFirst().IsCollapsed())){
-                        smallest = map[i][j].size();
-                        x = i;
-                        y = j;
-                    }
-                }
-            }
+            tileQueue.poll();
+
         }
     }
 
