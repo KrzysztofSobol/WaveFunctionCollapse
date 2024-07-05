@@ -7,7 +7,6 @@ public class Tile implements Cloneable{
     private int south;
     private int west;
 
-    private boolean inQueue;
     private boolean collapsed;
 
     public Tile(char display, int weight, int north, int east, int south, int west) {
@@ -29,10 +28,6 @@ public class Tile implements Cloneable{
     }
 
     // Getters and Setters
-
-    public boolean isInQueue() {return inQueue; }
-
-    public void setInQueue(boolean b) {this.inQueue = b; }
 
     public void collapse() {
         this.collapsed = true;
@@ -89,8 +84,7 @@ public class Tile implements Cloneable{
     @Override
     public Tile clone() {
         try {
-            Tile cloned = (Tile) super.clone();
-            return cloned;
+            return (Tile) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }

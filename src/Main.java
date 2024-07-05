@@ -4,23 +4,9 @@ import java.util.LinkedList;
 public class Main {
     public static void main(String[] args) {
         LinkedList<Tile> tiles = new LinkedList<>();
-        /*
-        Tile grass = new Tile('G', 50, 1, 1, 1, 1);
-        Tile water = new Tile('X', 20, 3, 3, 3, 3);
-        Tile coast = new Tile('S', 10, 1, 2, 3, 2);
-        Tile coast_corner_L = new Tile('L', 10, 1, 2, 2, 1);
-        Tile coast_corner_C = new Tile('C', 10, 2, 3, 3, 2);
 
-
-
-        tiles.add(grass);
-        tiles.add(water);
-        AddRotated(coast, tiles);
-        AddRotated(coast_corner_L, tiles);
-        AddRotated(coast_corner_C, tiles);
-        */
-        Tile grass = new Tile('X', 200, 3, 3, 3, 3);
-        Tile sea = new Tile('1', 50, 1, 1, 1, 1);
+        Tile grass = new Tile('X', 300, 3, 3, 3, 3);
+        Tile sea = new Tile('1', 150, 1, 1, 1, 1);
 
         Tile coast = new Tile('A', 10, 3, 5, 1, 5);
         Tile coast1 = new Tile('B', 10, 4, 3, 4, 1);
@@ -54,7 +40,7 @@ public class Main {
 
         Map map = new Map(10, 10);
         map.init(tiles);
-        map.Generate();
+        LinkedList<Step> steps = map.Generate();
 
         System.out.println(map);
     }

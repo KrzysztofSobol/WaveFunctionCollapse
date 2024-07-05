@@ -7,6 +7,7 @@ public class Map {
     private final int xMax;
     private final int yMax;
     private LinkedList<Tile>[][] map;
+    private LinkedList<Step> steps;
     private PriorityQueue<TileInfo> tileQueue;
 
     public Map(int x, int y) {
@@ -14,9 +15,11 @@ public class Map {
         this.yMax = y;
     }
 
+    @SuppressWarnings("unchecked")
     public void init(LinkedList<Tile> tiles) {
         tiles = deepCopyTiles(tiles);
         map = new LinkedList[xMax][yMax];
+        steps = new LinkedList<>();
         tileQueue = new PriorityQueue<>();
 
         for (int i = 0; i < xMax; i++) {
@@ -34,16 +37,16 @@ public class Map {
         return copy;
     }
 
-    @SuppressWarnings({"DataFlowIssue", "ConstantValue"})
-    public void Generate(){
+
+    @SuppressWarnings("DataFlowIssue")
+    public LinkedList<Step> Generate(){
         Random rand = new Random();
         int x = rand.nextInt(xMax);
         int y = rand.nextInt(yMax);
 
         tileQueue.add(new TileInfo(x, y, 1));
 
-        // Choosing first random tile on the map
-        while(!tileQueue.isEmpty()){
+        for(int h = 0; h < (xMax*yMax)-1; h++){
             TileInfo nextTile = tileQueue.peek();
             x = nextTile.x;
             y = nextTile.y;
@@ -51,11 +54,14 @@ public class Map {
             Tile tile = RandomTile(map[x][y]);
             map[x][y].clear();
             map[x][y].add(tile);
-            map[x][y].getFirst().collapse();
+            tile.collapse();
+
             tileQueue.remove();
+            steps.add(new Step(x, y, tile.getDisplay()));
 
             UpdateNeighbours(x, y);
         }
+        return steps;
     }
 
     private void UpdateNeighbours(int x, int y) {
