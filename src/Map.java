@@ -17,6 +17,7 @@ public class Map {
     public void init(LinkedList<Tile> tiles) {
         tiles = deepCopyTiles(tiles);
         map = new LinkedList[xMax][yMax];
+        tileQueue = new PriorityQueue<>();
 
         for (int i = 0; i < xMax; i++) {
             for (int j = 0; j < yMax; j++) {
@@ -33,6 +34,7 @@ public class Map {
         return copy;
     }
 
+    @SuppressWarnings({"DataFlowIssue", "ConstantValue"})
     public void Generate(){
         Random rand = new Random();
         int x = rand.nextInt(xMax);
@@ -41,15 +43,18 @@ public class Map {
         tileQueue.add(new TileInfo(x, y, 1));
 
         // Choosing first random tile on the map
-        while(tileQueue.isEmpty()){
+        while(!tileQueue.isEmpty()){
+            TileInfo nextTile = tileQueue.peek();
+            x = nextTile.x;
+            y = nextTile.y;
+
             Tile tile = RandomTile(map[x][y]);
             map[x][y].clear();
             map[x][y].add(tile);
             map[x][y].getFirst().collapse();
+            tileQueue.remove();
+
             UpdateNeighbours(x, y);
-
-            tileQueue.poll();
-
         }
     }
 
@@ -59,21 +64,37 @@ public class Map {
         // Check left neighbor (x - 1)
         if (x > 0 && map[x - 1][y].size() > 1) {
             filterTiles(map[x - 1][y], tile.getNorth(), 'N');
+            int mapSize = map[x - 1][y].size();
+            addToQueue(x - 1, y, mapSize);
         }
 
         // Check upper neighbor (y + 1)
         if (y < yMax - 1 && map[x][y + 1].size() > 1) {
             filterTiles(map[x][y + 1], tile.getEast(), 'E');
+            int mapSize = map[x][y + 1].size();
+            addToQueue(x, y + 1, mapSize);
         }
 
         // Check right neighbor (x + 1)
         if (x < xMax - 1 && map[x + 1][y].size() > 1) {
             filterTiles(map[x + 1][y], tile.getSouth(), 'S');
+            int mapSize = map[x + 1][y].size();
+            addToQueue(x + 1, y, mapSize);
         }
 
         // Check lower neighbor (y - 1)
         if (y > 0 && map[x][y - 1].size() > 1) {
             filterTiles(map[x][y - 1], tile.getWest(), 'W');
+            int mapSize = map[x][y - 1].size();
+            addToQueue(x, y - 1, mapSize);
+        }
+    }
+
+    private void addToQueue(int x, int y, int mapSize){
+        if(!map[x][y].getFirst().isCollapsed()){
+            tileQueue.add(new TileInfo(x, y, mapSize));
+        } else {
+            map[x][y].getFirst().collapse();
         }
     }
 
