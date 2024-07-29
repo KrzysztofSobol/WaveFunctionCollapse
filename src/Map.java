@@ -39,7 +39,7 @@ public class Map {
 
 
     @SuppressWarnings("DataFlowIssue")
-    public LinkedList<Step> Generate(){
+    public void Generate(){
         Random rand = new Random();
         int x = rand.nextInt(xMax);
         int y = rand.nextInt(yMax);
@@ -57,11 +57,9 @@ public class Map {
             tile.collapse();
 
             tileQueue.remove();
-            steps.add(new Step(x, y, tile.getDisplay()));
 
             UpdateNeighbours(x, y);
         }
-        return steps;
     }
 
     private void UpdateNeighbours(int x, int y) {
