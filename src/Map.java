@@ -7,7 +7,6 @@ public class Map {
     private final int xMax;
     private final int yMax;
     private LinkedList<Tile>[][] map;
-    private LinkedList<Step> steps;
     private PriorityQueue<TileInfo> tileQueue;
 
     public Map(int x, int y) {
@@ -19,7 +18,6 @@ public class Map {
     public void init(LinkedList<Tile> tiles) {
         tiles = deepCopyTiles(tiles);
         map = new LinkedList[xMax][yMax];
-        steps = new LinkedList<>();
         tileQueue = new PriorityQueue<>();
 
         for (int i = 0; i < xMax; i++) {
