@@ -40,7 +40,7 @@ public class Main {
 
         Map map = new Map(10, 10);
         map.init(tiles);
-        LinkedList<Step> steps = map.Generate();
+        map.Generate();
 
         System.out.println(map);
     }
